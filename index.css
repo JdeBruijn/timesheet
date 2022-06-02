@@ -1,0 +1,65 @@
+
+.main_container
+{
+	display: inline-block;
+	float: left;
+	width:100%;
+	margin:20px;
+	box-sizing: border-box;
+	font-size: 14px;
+}
+
+.line
+{
+	display:inline-block;
+	float: left;
+	width:100%;
+	margin-top:5px;
+}
+
+.row
+{
+	display: inline-block;
+	float: left;
+	width: calc( 100% - 40px );
+	box-sizing: border-box;
+	border-left:1px solid grey;
+	border-bottom: 1px solid grey;
+}
+
+.header_row
+{
+	font-weight: bold;
+	border-left:1px solid black !important;
+	border-bottom: 1px solid black !important;
+	border-top: 1px solid black;
+}
+
+.cell
+{
+	display:inline-block;
+	float:left;
+	text-align: center;
+	padding:5px;
+	height:18px;
+	margin:0;
+	border:none;
+	border-right: 1px solid grey;
+	box-sizing: border-box;
+	padding:0 !important;
+	overflow:hidden;
+}
+
+.header_cell
+{
+	border-right: 1px solid black !important;
+}
+
+.delete_box
+{
+	display: inline-block;
+	float: left;
+	width:14px;
+	margin:0;
+	margin-left:calc( 50% - 7px);
+}

@@ -1,0 +1,161 @@
+
+
+@media print 
+{
+	body {-webkit-print-color-adjust: exact;}
+}
+
+#main_container
+{
+	display:inline-block;
+	float:left;
+	width:58%;
+	margin-left:25%;
+	box-sizing:border-box;
+	font-size:14px;
+	padding:0 4%;
+	border:1px solid grey;
+}
+
+.invoice_row
+{
+	display:inline-block;
+	float:left;
+	width:100%;
+	box-sizing: border-box;
+	padding-top:10px;
+	padding-bottom:10px;
+}
+
+.row_block
+{
+	display:inline-block;
+/*	float:left;*/
+	text-align: center;
+	box-sizing: border-box;
+}
+
+.details_row
+{
+	display:inline-block;
+	width:100%;
+	text-align: inherit;
+	padding-left:5px;
+}
+.details_label
+{
+	display:inline-block;
+	float:left;
+	width:50%;
+	box-sizing: border-box;
+	font-weight:500;
+	text-align: right;
+}
+.details_value
+{
+	display:inline-block;
+	float:right;
+	width:50%;
+	box-sizing: border-box;
+	font-weight:400;
+	text-align: center;	
+}
+
+#billing_details_table
+{
+	display:inline-block;
+	float:left;
+	width:100%;
+	box-sizing: border-box;
+	border-right: 1px solid black;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	padding:0 !important;
+	margin-top:20px;
+}
+
+.table_row
+{
+	display:inline-block;
+	float:left;
+	width:100%;
+	min-width:100%;
+	box-sizing: border-box;
+}
+.table_header
+{
+	background: black;
+	color: white;
+}
+
+.table_cell
+{
+	display:inline-block;
+	float:left;
+	width:10%;
+	min-width: 10%;
+	min-height: 20px;
+	box-sizing: border-box;
+	border-left:1px solid black;
+	text-align:center;
+	padding:2px 0;
+}
+.header_cell
+{
+	font-weight:400;
+}
+.description_cell
+{
+	width:60%;
+	min-width: 60%;
+	padding-left:10px;
+}
+.amount_cell
+{
+	width:20%;
+	min-width: 20%;
+	text-align: right;
+	padding-right:5px;
+}
+
+
+.comments_box
+{
+	display:inline-block;
+	float:left;
+	width:100%;
+	box-sizing: border-box;
+	border:1px solid black;
+}
+.comments_header
+{
+	display:inline-block;
+	float:left;
+	width:100%;
+	box-sizing: border-box;
+	text-align: center;
+	background: grey;
+	color:white;
+}
+.comments_body
+{
+	display:inline-block;
+	float:left;
+	width:100%;
+	box-sizing: border-box;
+	padding:10px;	
+}
+.comments_line
+{
+	display:inline-block;
+	float:left;
+	width:100%;
+	text-align:left;
+}
+
+
+.black_background
+{
+	background:black;
+	color:white;
+}
