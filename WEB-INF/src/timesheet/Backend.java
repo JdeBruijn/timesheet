@@ -66,7 +66,7 @@ public class Backend extends HttpServlet
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 	{
 		String deletions_str = req.getHeader("deleted");
-		System.out.println(class_name+" deletions_str = "+deletions_str);//debug**
+		log.info(class_name+" deletions_str = "+deletions_str);//debug**
 
 		JSONObject changes = null;
 		try
@@ -83,7 +83,7 @@ public class Backend extends HttpServlet
 			return;
 		}//catch().
 
-		System.out.println(class_name+" doPost(): changes = "+changes.toString());//debug**
+		log.info(class_name+" doPost(): changes = "+changes.toString());//debug**
 
 		if( (changes==null || changes.size()<=0)  && (deletions_str.trim().isEmpty()))
 		{
@@ -100,14 +100,14 @@ public class Backend extends HttpServlet
 			for(String log_id: work_log_ids)
 			{
 				JSONObject row = (JSONObject) changes.get(log_id);
-				System.out.println(class_name+" doPost(): changes = "+changes.toString());//debug**
+				log.info(class_name+" doPost(): changes = "+changes.toString());//debug**
 
 				StringBuilder row_updates = new StringBuilder();
 				Set<String> keys = row.keySet();
 				for(String name: keys)
 				{
 					String value = (String) row.get(name);
-					System.out.println(class_name+" doPost(): name="+name+" value="+value);//debug**
+					log.info(class_name+" doPost(): name="+name+" value="+value);//debug**
 					if(name.equals("client_name"))
 					{name="work_log_client_id";}
 					if(row_updates.length()>0)
@@ -124,7 +124,7 @@ public class Backend extends HttpServlet
 
 				updates.append("UPDATE work_log SET "+row_updates);
 			}//for(row).
-			System.out.println(class_name+" doPost(): updates = "+updates.toString());//debug**
+			log.info(class_name+" doPost(): updates = "+updates.toString());//debug**
 		}//if.
 		//Deletions.
 		StringBuilder deletions = new StringBuilder();
@@ -154,7 +154,7 @@ public class Backend extends HttpServlet
 				{
 					stmt.setString(cv+1, changes_values.get(cv));
 				}//for(v).
-				System.out.println(class_name+" updates = "+stmt);//debug**
+				log.info(class_name+" updates = "+stmt);//debug**
 
 				stmt.executeUpdate();
 			}//if.
@@ -167,7 +167,7 @@ public class Backend extends HttpServlet
 				{
 					stmt.setInt(dv+1, delete_values.get(dv));
 				}//for(dv).
-				System.out.println(class_name+" deletions = "+stmt);//debug**
+				log.info(class_name+" deletions = "+stmt);//debug**
 
 				stmt.executeUpdate();
 			}//if.
@@ -192,7 +192,7 @@ public class Backend extends HttpServlet
 	private void getLogs(HttpServletRequest req, HttpServletResponse resp)
 	{
 		String date_range = req.getHeader("date_range");
-		System.out.println(class_name+" date_range = "+date_range);//debug**
+		log.info(class_name+" date_range = "+date_range);//debug**
 		long[] date_limits = getDateRange(date_range);
 
 		int client_id = getInt(req.getHeader("client_id"));//-1 if no client_id specified.
@@ -233,7 +233,7 @@ public class Backend extends HttpServlet
 			for(String[]header: headers_list)
 			{total_size+=Integer.parseInt(header[2]);}
 			total_size=total_size/100;
-			//System.out.println(class_name+" total_size="+total_size);//debug**
+			//log.info(class_name+" total_size="+total_size);//debug**
 
 			JSONArray display_headers = new JSONArray();
 			JSONArray column_sizes = new JSONArray();
@@ -246,7 +246,7 @@ public class Backend extends HttpServlet
 				column_sizes.add(column_size);
 			}//for(header).
 
-			System.out.println(class_name+" work_log_query = "+work_log_query);//debug**
+			log.info(class_name+" work_log_query = "+work_log_query);//debug**
 
 			ResultSet res = conn.prepareStatement(work_log_query).executeQuery();
 			ResultSetMetaData meta = res.getMetaData();
@@ -292,7 +292,7 @@ public class Backend extends HttpServlet
 					{row.put(index_name,res.getString(index_name));}
 				}//for(header).
 				rows_data.add(row);
-				//System.out.println(class_name+" row = "+row.toString());//debug**
+				//log.info(class_name+" row = "+row.toString());//debug**
 			}//while.
 
 		//Last daily total.	
@@ -391,7 +391,7 @@ public class Backend extends HttpServlet
 		long start_epoch = Long.parseLong(split_range[0])/1000;
 		long end_epoch = Long.parseLong(split_range[1])/1000;
 
-		System.out.println(class_name+" start_epoch = "+start_epoch+"  end_epoch = "+end_epoch);//debug**
+		log.info(class_name+" start_epoch = "+start_epoch+"  end_epoch = "+end_epoch);//debug**
 
 		return new long[]{start_epoch, end_epoch};
 	}//getDateRange().
@@ -429,21 +429,44 @@ public class Backend extends HttpServlet
 		{log.severe(class_name+" IO Exception while trying to return data:\n"+ioe);}
 	}//returnData().
 
-	public static InvoiceData generateInvoice(String ids_str, String group_by)
+	public static InvoiceData generateInvoice(String ids_str, String group_by, String invoice_id_str, String rate_str)
 	{
 		InvoiceData invoice_data = new InvoiceData();
-		if(ids_str==null || ids_str.trim().isEmpty())
+
+		boolean new_invoice=false;
+		try
+		{invoice_data.invoice_number = Integer.parseInt(invoice_id_str);}
+		catch(NullPointerException | NumberFormatException nfe)
 		{
-			invoice_data.error=true;
-			invoice_data.error_message="No logs specified.";
-			return invoice_data;
-		}//if.
+			log.info(class_name+" Exception trying to get invoice_number from '"+invoice_id_str+"':\n"+nfe);
+			log.info(class_name+" Creating new Invoice...");
+			new_invoice=true;
+		}//catch().
+
+		try
+		{invoice_data.rate = Double.parseDouble(rate_str);}
+		catch(NullPointerException | NumberFormatException nfe)
+		{
+			log.info(class_name+" Exception trying to get rate from '"+rate_str+"':\n"+nfe);
+			log.info(class_name+" Using base_rate of '"+invoice_data.base_rate+"':\n"+nfe);
+		}//catch().
 
 		if(group_by==null || group_by.trim().isEmpty())
 		{group_by="work_log_description";}
 
-		String placeholders = ids_str.replaceAll("[^,]+","?");
-		String[] ids = ids_str.split(",");
+		String placeholders=null;
+		String[] ids = null;
+		if(new_invoice)
+		{
+			if(ids_str==null || ids_str.trim().isEmpty())
+			{
+				invoice_data.error=true;
+				invoice_data.error_message="No logs specified.";
+				return invoice_data;
+			}//if.
+			placeholders = ids_str.replaceAll("[^,]+","?");
+			ids = ids_str.split(",");
+		}//if.
 
 		String get_last_invoice_number = "SELECT global_invoice_number FROM global";
 
@@ -452,9 +475,10 @@ public class Backend extends HttpServlet
 						+ " FROM work_log"
 						+ " LEFT JOIN client ON client_id=work_log_client_id"
 						+ " LEFT JOIN country ON country_id=client_country_id"
-						+ " WHERE work_log_id IN ("+placeholders+")"
-						+ " AND work_log_invoice_number=0"
-						+ " GROUP BY "+group_by
+						+ " WHERE work_log_invoice_number="+invoice_data.invoice_number;
+		if(new_invoice)
+		{get_invoice_data+=" AND work_log_id IN ("+placeholders+")";}
+		get_invoice_data+=" GROUP BY "+group_by
 						+ " ORDER BY min_id";
 
 		String update_last_invoice_number = "UPDATE global SET global_invoice_number=?";
@@ -466,21 +490,27 @@ public class Backend extends HttpServlet
 		Connection conn = DatabaseHelper.getConnection();
 		try
 		{
-		//Get Invoice Number.	
-			PreparedStatement stmt = conn.prepareStatement(get_last_invoice_number);
-			ResultSet res = stmt.executeQuery();
-			if(res.next())
-			{invoice_data.invoice_number=res.getInt("global_invoice_number")+1;}
+		//Get Invoice Number.
+			if(new_invoice)
+			{
+				PreparedStatement stmt = conn.prepareStatement(get_last_invoice_number);
+				ResultSet res = stmt.executeQuery();
+				if(res.next())
+				{invoice_data.invoice_number=res.getInt("global_invoice_number")+1;}
+			}//if.
 
 		//Get invoice data.
-			stmt = conn.prepareStatement(get_invoice_data);
-			for(int i=0; i<ids.length; i++)
-			{stmt.setInt(i+1, Integer.parseInt(ids[i]));}
-			System.out.println(class_name+" get_invoice_data= "+stmt);//debug**
-			System.out.println(class_name+" get_invoice_data= "+get_invoice_data);//debug**
+			PreparedStatement stmt = conn.prepareStatement(get_invoice_data);
+			if(new_invoice)
+			{
+				for(int i=0; i<ids.length; i++)
+				{stmt.setInt(i+1, Integer.parseInt(ids[i]));}
+			}//if.
+			log.info(class_name+" get_invoice_data= "+get_invoice_data);//debug**
+			log.info(class_name+" get_invoice_data= "+stmt);//debug**
 
 			boolean results_found=false;
-			res = stmt.executeQuery();
+			ResultSet res = stmt.executeQuery();
 			int prev_client_id=-1;
 			while(res.next())
 			{
@@ -512,12 +542,12 @@ public class Backend extends HttpServlet
 			if(invoice_data.error)
 			{return invoice_data;}
 
-			if(results_found)
+			if(results_found && new_invoice)
 			{
 			//Update Invoice Number in db.
 				stmt = conn.prepareStatement(update_last_invoice_number);
 				stmt.setInt(1, invoice_data.invoice_number);
-				System.out.println(class_name+" update_last_invoice_number="+stmt);//debug**
+				log.info(class_name+" update_last_invoice_number="+stmt);//debug**
 				stmt.executeUpdate();
 
 			//Update work_logs.
@@ -529,10 +559,10 @@ public class Backend extends HttpServlet
 					stmt.setInt(insert_index, Integer.parseInt(id_str));
 					insert_index++;
 				}//for(id)
-				System.out.println(class_name+" update_work_logs="+stmt);//debug**
+				log.info(class_name+" update_work_logs="+stmt);//debug**
 				stmt.executeUpdate();
 			}//if.
-			else
+			else if(!results_found)
 			{
 				invoice_data.error=true;
 				invoice_data.error_message="No valid work_logs found.";

@@ -23,7 +23,9 @@ public class InvoiceData
 	public String invoice_date="";
 	public String due_date="";
 
-	public static double base_rate = 15.0;//Change to 25.0
+	public static double base_rate = 20.0;
+
+	public double rate=base_rate;
 
 	public int invoice_number=0;
 
@@ -50,9 +52,7 @@ public class InvoiceData
 		if(duration<=0)
 		{return;}
 
-		double hourly_rate=base_rate;
-		if(start_epoch>=1651356001l)//Rate changing on the 1st of May.
-		{hourly_rate = 25.0;}
+		double hourly_rate=rate;
 
 		double amount = round((duration*hourly_rate),2);
 		this.total+=amount;

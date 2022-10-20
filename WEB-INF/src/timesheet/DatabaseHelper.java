@@ -20,7 +20,7 @@ public class DatabaseHelper
 	private static final String class_name="DatabaseHelper";
 	private static final Logger log = Logger.getLogger(class_name);
 	
-	private static String database_ip = "192.168.0.122";
+	private static String database_ip = "192.168.88.122";
 	private static String database = "timesheet";
 	private static String username = "jannie";
 	private static String password = "Jackal51";
@@ -35,8 +35,9 @@ public class DatabaseHelper
 		{Class.forName("com.mysql.cj.jdbc.Driver");}
 		catch(Exception e)
 		{log.severe(class_name+" ERROR! Failed to initialise db driver: \n"+e);}
-		String url = "jdbc:mysql://"+database_ip+":3306/"+database+"?allowMultiQueries=true&user="+username+"&password="+password+"&serverTimezone=America/Los_Angeles";
-		
+		//String url = "jdbc:mysql://"+database_ip+":3306/"+database+"?allowMultiQueries=true&user="+username+"&password="+password+"&serverTimezone=America/Los_Angeles";
+		String url = "jdbc:mysql://"+database_ip+":3306/"+database+"?allowMultiQueries=true&user="+username+"&password="+password;
+
 		try
 		{conn = DriverManager.getConnection(url);}
 		catch(SQLException se)

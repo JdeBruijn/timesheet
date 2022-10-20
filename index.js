@@ -346,7 +346,11 @@ function generateInvoice()
 	if(log_ids.length<=0)
 	{alert("No valid logs found for invoice.");return;}
 
-	window.open("invoice.jsp?row_ids="+log_ids+"&group_by= ");
+	var rate_input = document.getElementById("rate_input");
+	var rate=rate_input.value;
+
+	window.open("invoice.jsp?rate="+rate+"&row_ids="+log_ids+"&group_by= ");
+	window.open("invoice2.jsp?rate="+rate+"&row_ids="+log_ids+"&group_by= ");
 }//generateInvoice().
 
 
