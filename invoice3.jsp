@@ -34,7 +34,7 @@ else
 			<div class="details_row" style="font-weight: 700; font-size: 30px;">INVOICE</div>
 		</div>
 		<div class="invoice_row" style="padding-top:0px;">
-			<div class="row_block" style="width:30%; float:right; text-align:left;">
+			<div class="row_block" style="width:30%; float:left; text-align:left;">
 				<div class="details_row" style="font-weight:500">Jonathan de Bruijn</div>
 				<div class="details_row">8 Tedder road, Greendale</div>
 				<div class="details_row">Harare, Zimbabwe</div>
@@ -42,9 +42,7 @@ else
 				<a class="details_row" href="mailto:jondebruijn42@gmail.com">jondebruijn42@gmail.com</a>
 				<a class="details_row" href="https://jondeb.duckdns.org/jon/">website</a>
 			</div>
-		</div>
-		<div class="invoice_row" style="padding-top:0px">
-			<div class="row_block" style="width:30%;float:left;text-align:left;">
+			<div class="row_block" style="width:30%;float:right;">
 				<div class="details_row">
 					<div class="details_label">Date: </div>
 					<div class="details_value"><%=invoice_data.invoice_date%></div>
@@ -112,14 +110,9 @@ else
 		<div class="invoice_row" style="float:left;">
 			<div class="row_block" style="float:left; width:80%; padding:20px; padding-left:0;">
 				<div class="comments_box">
-					<div class="comments_header">Payment Details</div>
+					<div class="comments_header">Comments</div>
 					<div class="comments_body">
-						<div class="comments_line"><b>Account Name:</b> Jonathan de Bruijn</div>
-						<div class="comments_line"><b>Address:</b> 8 Tedder road, Harare, Zimbabwe</div>
-						<div class="comments_line"><b>Account Number:</b> 8312255558</div>
-						<div class="comments_line"><b>Bank Name:</b> Wise</div>
-						<div class="comments_line"><b>Bank Address:</b> 30 W. 26th Street, Sixth Floor, New York NY 10010, United States</div>
-						<div class="comments_line"><b>Swift Code:</b> CMFGUS33</div>
+						<div class="comments_line">1) All amounts are in USD.</div>
 					<!--	<div class="comments_line">2) Payments will be accepted in USD or ZWL at the current rate on the day of payment.</div>-->
 					</div>
 				</div>
