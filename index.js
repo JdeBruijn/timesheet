@@ -213,6 +213,7 @@ function populateTable(display_headers, data_headers, column_sizes, rows_data)
 			}//else.
 			cell.setAttribute("name",name);
 			cell.classList.add("cell");
+			cell.classList.add(name);
 			cell.style.width=column_sizes[c]+"%";
 			row_element.appendChild(cell);
 		}//for(c).
@@ -286,17 +287,35 @@ function submitChanges()
 
 	var deleted_rows = document.getElementsByClassName("deleted");
 	var deleted_ids = "";
-	if(deleted_rows.length>0 && confirm("Are you sure you want to delete "+deleted_rows.length+" rows?"))
+	var total_time_deleted=0;
+	for(r=0; r<deleted_rows.length; r++)
 	{
-		for(r=0; r<deleted_rows.length; r++)
+		var elapsed_time_cell = deleted_rows[r].getElementsByClassName("elapsed_time")[0];
+		var elapsed_time = (elapsed_time_cell==null) ? 0 : Number(elapsed_time_cell.innerHTML);
+		total_time_deleted+=elapsed_time;
+	}//for(r).
+	if(deleted_rows.length>0)
+	{
+		if(confirm("Are you sure you want to delete "+deleted_rows.length+" rows totalling "+total_time_deleted+" hours?"))
 		{
-			if(r>0)
-			{deleted_ids+="~!";}
-			deleted_ids+=deleted_rows[r].id;
-		}//for(r).
+			if(total_time_deleted>0)
+			{
+				if(!confirm("Are you sure? "+total_time_deleted+" hours will be deleted!"))
+				{return;}
+			}//if.
+			for(r=0; r<deleted_rows.length; r++)
+			{
+				if(r>0)
+				{deleted_ids+="~!";}
+				deleted_ids+=deleted_rows[r].id;
+			}//for(r).
+		}//if.
+		else
+		{return;}
 	}//if.
 	console.log("deleted_rows = "+deleted_ids);//debug**
 
+	console.log("altered_rows="+altered_rows.length+" deleted_rows="+deleted_rows.length);//debug**
 	if(altered_rows.length<=0 && deleted_rows.length<=0)
 	{alert("No changes found"); return;}
 
