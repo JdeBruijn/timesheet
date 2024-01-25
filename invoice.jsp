@@ -69,7 +69,7 @@ else
 				<div id="client_name" class="details_row"><%=invoice_data.client_details.get("client_name")%></div>
 				<div id="client_street_address" class="details_row"><%=invoice_data.client_details.get("client_address")%></div>
 				<div id="client_city" class="details_row"><%=invoice_data.client_details.get("client_city")%></div>
-				<div id="client_phone_number" class="details_row"><%=invoice_data.client_details.get("client_phone_number")%></div>
+				<div id="client_city" class="details_row"><%=invoice_data.client_details.get("client_country")%></div>
 			</div>
 		</div>
 		<div id="billing_details_table" class="invoice_row" style="padding-bottom:0;">

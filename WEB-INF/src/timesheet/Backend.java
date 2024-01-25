@@ -212,7 +212,7 @@ public class Backend extends HttpServlet
 		{
 			work_log_query+=" AND work_log_client_id="+client_id;
 		}//if.
-		work_log_query+=" ORDER BY work_log_id ASC";
+		work_log_query+=" ORDER BY work_log_start_epoch ASC";
 
 		String group_by_column=req.getHeader("group_by");
 		if(group_by_column==null || group_by_column.trim().isEmpty())
@@ -530,7 +530,8 @@ public class Backend extends HttpServlet
 				{
 					log.info(class_name+" cur_client_id="+cur_client_id+" prev_client_id="+prev_client_id+" work_log_id="+res.getString("work_log_id"));//debug**
 					invoice_data.error=true;
-					invoice_data.error_message="Logs aren't all for the same client";
+					invoice_data.error_message="Logs aren't all for the same client.";
+					invoice_data.error_message+=" Log "+res.getInt("work_log_id")+" has client_id = "+cur_client_id+". Previous client_id="+prev_client_id;
 				}//else if.
 
 				invoice_data.addBillingRow(res.getLong("work_log_start_epoch"), res.getDouble("elapsed_time"),res.getString("work_log_description"));

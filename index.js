@@ -163,6 +163,8 @@ function populateTable(display_headers, data_headers, column_sizes, rows_data)
 
 	for(rd=0; rd<rows_data.length; rd++)
 	{
+		var total_row=false;
+
 		var columns = rows_data[rd];
 		if(columns==null || columns.length<=0)
 		{continue;}
@@ -189,8 +191,11 @@ function populateTable(display_headers, data_headers, column_sizes, rows_data)
 			{
 				cell = document.createElement("INPUT");
 				cell.value = columns[name];
+				if(!total_row && (columns[name]==null || columns[name]==""))
+				{row_element.classList.add("highlighted");}
 				cell.setAttribute("list","client_selector_list");
 				cell.onclick=markAsEdited;
+				cell.onchange=checkClient;
 			}//else if.
 			else
 			{
@@ -198,7 +203,10 @@ function populateTable(display_headers, data_headers, column_sizes, rows_data)
 				if(name=="work_log_id")
 				{
 					if(row_element.id=="0")//indicated a sum row.
-					{cell.innerHTML="";}
+					{
+						total_row=true;
+						cell.innerHTML="";
+					}//if.
 					else
 					{
 						var check_box = document.createElement("INPUT");
@@ -244,6 +252,14 @@ function markAsDeleted(event)
 
 	row.classList.toggle("deleted");
 }//markAsDeleted().
+
+function checkClient(event)
+{
+	var client_input = event.target;
+	var row = client_input.parentElement;
+	if(client_input.value!=null && client_input.value!="")
+	{row.classList.remove("highlighted");}
+}//checkClient().
 
 function submitChanges()
 {
@@ -350,8 +366,11 @@ function submitChanges()
 	{alert("Error trying to save changes:\n"+error);});//catch().
 }//submitChanges().
 
-function generateInvoice()
+function generateInvoice(event)
 {
+	var button = event.target;
+	button.disabled=true;
+
 	var rows = document.getElementsByClassName("row");
 	var log_ids = "";
 	for(r=0; r<rows.length; r++)
@@ -369,7 +388,7 @@ function generateInvoice()
 	var rate=rate_input.value;
 
 	window.open("invoice.jsp?rate="+rate+"&row_ids="+log_ids+"&group_by= ");
-	window.open("invoice2.jsp?rate="+rate+"&row_ids="+log_ids+"&group_by= ");
+//	window.open("invoice2.jsp?rate="+rate+"&row_ids="+log_ids+"&group_by= ");
 }//generateInvoice().
 
 

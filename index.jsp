@@ -14,7 +14,7 @@
 		<button id="button" onclick="submitChanges()" style="margin-left:20px; float:right;">Submit Changes</button>
 		<button id="download_button" onclick="downloadCSVByHTMLClass('main_container','row','cell',null, 'timesheet_download.csv',null)" style="margin-left:20px;float:right;">Download CSV</button>
 		<input id="rate_input" type="number" placeholder="<%=InvoiceData.base_rate%>">
-		<button id="invoice_button" onclick="generateInvoice()">Generate Invoice</button>
+		<button id="invoice_button" onclick="generateInvoice(event)">Generate Invoice</button>
 	</div>
 	<div class="line">
 		<div style="display:inline-block;">Start date: </div>
