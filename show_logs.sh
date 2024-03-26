@@ -1,1 +1,1 @@
-tail --lines=200 $CATALINA_HOME/logs/catalina.out
+tail --lines=200 /var/lib/tomcat9/logs/catalina.out

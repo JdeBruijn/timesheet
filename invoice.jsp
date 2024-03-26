@@ -29,6 +29,10 @@
 <%}//if.
 else
 {%>
+	<div class="line">
+		<button id="save_edits_button" onclick="onFinishEdit()">Save edits</button>
+	</div>
+
 	<div id="main_container">
 		<div class="invoice_row" style="padding-bottom:0px; text-align: center;">
 			<div class="details_row" style="font-weight: 700; font-size: 30px;">INVOICE</div>
@@ -93,9 +97,9 @@ else
 			{background_color = "white";}
 		%>
 			<div class="table_row" style="background:<%=background_color%>;">
-				<div class="table_cell description_cell"><%=details[0]%></div>
-				<div class="table_cell"><%=details[1]%></div>
-				<div class="table_cell"><%=details[2]%></div>
+				<div class="table_cell description_cell" onclick="editCell(event)"><%=details[0]%></div>
+				<div class="table_cell hours_cell" onclick="editCell(event)"><%=details[1]%></div>
+				<div class="table_cell rate_cell" onclick="editCell(event)"><%=details[2]%></div>
 				<div class="table_cell amount_cell" style="width:10%;"><%=details[3]%></div>
 			</div>
 		<%}//for(details).%>

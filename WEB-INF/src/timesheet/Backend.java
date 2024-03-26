@@ -468,7 +468,7 @@ public class Backend extends HttpServlet
 			ids = ids_str.split(",");
 		}//if.
 
-		String get_last_invoice_number = "SELECT global_invoice_number FROM global";
+		String get_last_invoice_number = "SELECT global_last_invoice_number FROM global";
 
 		String get_invoice_data = "SELECT work_log_id, work_log_start_epoch, SUM(ROUND((work_log_end_epoch-work_log_start_epoch)/3600, 2)) AS elapsed_time,"
 						+ " work_log_description, MIN(work_log_id) AS min_id, client.*, country_name AS client_country"
@@ -481,7 +481,7 @@ public class Backend extends HttpServlet
 		get_invoice_data+=" GROUP BY "+group_by
 						+ " ORDER BY min_id";
 
-		String update_last_invoice_number = "UPDATE global SET global_invoice_number=?";
+		String update_last_invoice_number = "UPDATE global SET global_last_invoice_number=?";
 
 		String update_work_logs = "UPDATE work_log SET work_log_invoice_number=?"
 							+ " WHERE work_log_id IN ("+placeholders+")"
@@ -496,7 +496,7 @@ public class Backend extends HttpServlet
 				PreparedStatement stmt = conn.prepareStatement(get_last_invoice_number);
 				ResultSet res = stmt.executeQuery();
 				if(res.next())
-				{invoice_data.invoice_number=res.getInt("global_invoice_number")+1;}
+				{invoice_data.invoice_number=res.getInt("global_last_invoice_number")+1;}
 			}//if.
 
 		//Get invoice data.

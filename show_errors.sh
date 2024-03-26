@@ -1,1 +1,1 @@
-tail --lines=50  $CATALINA_HOME/logs/localhost.*.log
+tail --lines=50 /var/lib/tomcat9/logs/localhost.*.log
