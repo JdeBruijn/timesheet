@@ -1,0 +1,39 @@
+
+
+.main_box
+{
+	display: block;
+	position: absolute;
+	top: 40%;
+	left: calc( 50% - 250px );
+	width: 500px;
+	border: 1px solid grey;
+	box-shadow: 5px 5px 3px lightgrey;
+}
+
+.input_row
+{
+	display:inline-block;
+	float: left;
+	width: 100%;
+	box-sizing:border-box;
+	padding-left: 20px;
+	margin-bottom: 10px;
+}
+
+.input_label
+{
+	display:inline-block;
+	float:left;
+	box-sizing:border-box;
+	margin-right: 10px;
+}
+
+.input_box
+{
+	display: inline-block;
+	float:left;
+	box-sizing: border-box;
+	min-width: 200px;
+}
+

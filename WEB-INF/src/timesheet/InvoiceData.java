@@ -17,20 +17,23 @@ public class InvoiceData
 	private static final String class_name="InvoiceData";
 	private static final Logger log = Logger.getLogger(class_name);
 
+
+	public static double base_rate = 20.0;
+	public static int default_rows_number = 10;
+
+
 	public boolean error=false;
 	public String error_message="";
 
 	public String invoice_date="";
 	public String due_date="";
 
-	public static double base_rate = 20.0;
-
 	public double rate=base_rate;
 
 	public int invoice_number=0;
 
-	public LinkedList<String[]> billing_rows = new LinkedList<String[]>();
-	public HashMap<String, String> client_details = new HashMap<String, String>();
+	private LinkedList<String[]> billing_rows = new LinkedList<String[]>();
+	private HashMap<String, String> client_details = new HashMap<String, String>();
 
 	private double total=0;
 
@@ -63,6 +66,19 @@ public class InvoiceData
 
 		this.billing_rows.add(details);
 	}//addBillingRow().
+
+	public void addClientDetail(String key, String value)
+	{
+		if(this.client_details==null)
+		{this.client_details = new HashMap<String, String>();}
+
+		this.client_details.put(key, value);
+	}//addClientDetail().
+
+	public void setClientDetails(HashMap<String, String> details)
+	{
+		this.client_details=details;
+	}//setClientDetails().
 
 	public String getInvoiceNumber()
 	{
@@ -109,5 +125,36 @@ public class InvoiceData
 		return dc.format(i);
 	}//ensure6Places().
 
+
+	public LinkedList<String[]> getBillingRows()
+	{
+		if(this.billing_rows!=null && this.billing_rows.size()>0)
+		{return this.billing_rows;}
+		
+		this.billing_rows = new LinkedList<String[]>();
+		for(int br=0; br<default_rows_number; br++)
+		{
+			this.billing_rows.add(new String[] {"", "", "", ""});
+		}//for(br).
+
+		return this.billing_rows;
+	}//getBillingRows().
+
+	public HashMap<String, String> getClientDetails()
+	{
+		if(this.client_details!=null && this.client_details.size()>0)
+		{return this.client_details;}
+
+		this.client_details = new HashMap<String, String>();
+		client_details.put("client_id", "");
+		this.client_details.put("client_name", "");
+		this.client_details.put("client_address", "");
+		this.client_details.put("client_city", "");
+		this.client_details.put("client_country", "");
+		this.client_details.put("client_phone_number", "");
+		this.client_details.put("client_email", "");
+
+		return this.client_details;
+	}//getClientDetails().
 
 }//class InvoiceData.

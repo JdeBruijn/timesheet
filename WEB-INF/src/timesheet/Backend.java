@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.util.logging.Logger;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.HashMap;
 
 import java.lang.Math;
 
@@ -349,11 +350,24 @@ public class Backend extends HttpServlet
 
 	private void getClients(HttpServletRequest req, HttpServletResponse resp)
 	{
+		JSONObject data = new JSONObject();
+		JSONObject clients = getClients();
+		if(clients==null)
+		{
+			returnData(false, null, resp, "Failed to retrieve clients");
+			return;
+		}//if.
+		
+		data.put("clients",clients);
+		returnData(true, data, resp, "");
+	}//getClients().
+
+	public static JSONObject getClients()
+	{
 		String get_clients = "SELECT client_id, client_name"
 						+ " FROM client";
 
-		Connection conn = DatabaseHelper.getConnection();
-		try
+		try(Connection conn = DatabaseHelper.getConnection())
 		{
 			ResultSet res = conn.prepareStatement(get_clients).executeQuery();
 			JSONObject clients = new JSONObject();
@@ -361,24 +375,13 @@ public class Backend extends HttpServlet
 			{
 				clients.put(res.getString("client_name"), res.getString("client_id"));
 			}//while.
-			JSONObject data = new JSONObject();
-			data.put("clients",clients);
-			returnData(true, data, resp, "");
-			return;
+			return clients;
 		}//try
 		catch(SQLException se)
 		{
 			log.severe(class_name+" SQL Exception while trying to get clients:\n"+se);
-			returnData(false, null, resp, "Failed to retrieve clients");
-			return;
+			return null;
 		}//catch().
-		finally
-		{
-			try
-			{conn.close();}
-			catch(NullPointerException | SQLException se)
-			{log.severe(class_name+" Exception while trying to close db connection in getClients():\n"+se);}
-		}//finally.
 	}//getClients().
 
 
@@ -429,10 +432,8 @@ public class Backend extends HttpServlet
 		{log.severe(class_name+" IO Exception while trying to return data:\n"+ioe);}
 	}//returnData().
 
-	public static InvoiceData generateInvoice(String ids_str, String group_by, String invoice_id_str, String rate_str)
+	public static InvoiceData generateInvoice(String ids_str, String group_by, String invoice_id_str, String rate_str, InvoiceData invoice_data)
 	{
-		InvoiceData invoice_data = new InvoiceData();
-
 		boolean new_invoice=false;
 		try
 		{invoice_data.invoice_number = Integer.parseInt(invoice_id_str);}
@@ -518,13 +519,13 @@ public class Backend extends HttpServlet
 				if(prev_client_id==-1)
 				{
 					String client_id_str = InvoiceData.ensure3Places(res.getInt("client_id"));
-					invoice_data.client_details.put("client_id", client_id_str);
-					invoice_data.client_details.put("client_name", res.getString("client_name"));
-					invoice_data.client_details.put("client_address", res.getString("client_address"));
-					invoice_data.client_details.put("client_city", res.getString("client_city"));
-					invoice_data.client_details.put("client_country", res.getString("client_country"));
-					invoice_data.client_details.put("client_phone_number", res.getString("client_phone_number"));
-					invoice_data.client_details.put("client_email", res.getString("client_email"));
+					invoice_data.addClientDetail("client_id", client_id_str);
+					invoice_data.addClientDetail("client_name", res.getString("client_name"));
+					invoice_data.addClientDetail("client_address", res.getString("client_address"));
+					invoice_data.addClientDetail("client_city", res.getString("client_city"));
+					invoice_data.addClientDetail("client_country", res.getString("client_country"));
+					invoice_data.addClientDetail("client_phone_number", res.getString("client_phone_number"));
+					invoice_data.addClientDetail("client_email", res.getString("client_email"));
 				}//if.
 				else if(cur_client_id!=prev_client_id)
 				{
@@ -587,5 +588,36 @@ public class Backend extends HttpServlet
 		}//finally.
 
 	}//generateInvoice().
+
+	public static HashMap<String, String> getClientDetails(int client_id)
+	{
+		HashMap<String, String> client_details = new HashMap<String, String>();
+
+		String get_client_details = "SELECT *"
+								+ " FROM client"
+								+ " JOIN country ON country_id=client_country_id"
+								+ " WHERE client_id="+client_id;
+		try(Connection conn = DatabaseHelper.getConnection())
+		{
+			log.info(class_name+" getClientDetails(): get_client_details="+get_client_details);//INFO.
+			ResultSet res = conn.prepareStatement(get_client_details).executeQuery();
+
+			if(res.next())
+			{
+				client_details.put("client_id", res.getString("client_id"));
+				client_details.put("client_name", res.getString("client_name"));
+				client_details.put("client_address", res.getString("client_address"));
+				client_details.put("client_city", res.getString("client_city"));
+				client_details.put("client_country", res.getString("country_name"));
+				client_details.put("client_phone_number", res.getString("client_phone_number"));
+				client_details.put("client_email", res.getString("client_email"));
+			}//if.
+		}//try.
+		catch(SQLException se)
+		{
+			log.severe(class_name+" SQL Exception while trying to get client details:\n"+se);
+		}//catch().
+		return client_details;
+	}//getClientDetails().
 
 }//class Backend.

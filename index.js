@@ -391,6 +391,11 @@ function generateInvoice(event)
 //	window.open("invoice2.jsp?rate="+rate+"&row_ids="+log_ids+"&group_by= ");
 }//generateInvoice().
 
+function createInvoice(event)
+{
+	window.location.href="/timesheet/create_invoice.jsp";
+}//createInvoice().
+
 
 function setupDateFilters()
 {

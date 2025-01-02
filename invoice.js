@@ -1,5 +1,7 @@
 var current_input_cell = null;
 
+//Defined in invoice.jsp
+//var last_background_colour;
 
 function printInvoiceToPDF()
 {
@@ -77,7 +79,8 @@ function onFinishEdit()
 
 	current_input_cell=null;
 
-	adjustTotals(parent);	
+	if(parent.classList.contains("table_row"))
+	{adjustTotals(parent);}
 }//onFinishEdit().
 
 function createCell(original_cell, type)
@@ -99,6 +102,69 @@ function createCell(original_cell, type)
 	}//else if.
 	return cell;
 }//createCell().
+
+function addRow(event)
+{
+	console.log("addRow()...");
+	if(last_background_colour=="white")
+	{last_background_colour="#e6e1e1";}
+	else
+	{last_background_colour="white";}
+
+	var table = document.getElementById("billing_details_table");
+	var button = event.target;
+
+	var row = document.createElement("DIV");
+	row.classList.add("table_row");
+	row.style.background=last_background_colour;
+	row.oncontextmenu=removeRow;
+	table.insertBefore(row, button);
+
+	var description_cell = document.createElement("DIV");
+	description_cell.classList.add("table_cell", "description_cell");
+	description_cell.onclick=editCell;
+	row.appendChild(description_cell);
+
+	var hours_cell = document.createElement("DIV");
+	hours_cell.classList.add("table_cell", "hours_cell");
+	hours_cell.onclick=editCell;
+	row.appendChild(hours_cell);
+
+	var rate_cell = document.createElement("DIV");
+	rate_cell.classList.add("table_cell", "rate_cell");
+	rate_cell.onclick=editCell;
+	row.appendChild(rate_cell);
+
+	var amount_cell = document.createElement("DIV");
+	amount_cell.classList.add("table_cell", "amount_cell");
+	amount_cell.onclick=editCell;
+	amount_cell.style.width="10%";
+	row.appendChild(amount_cell);
+
+}//addRow().
+
+function removeRow(event)
+{
+	event.preventDefault();
+	var row = event.target;
+	while(!row.classList.contains("table_row"))
+	{
+		row=row.parentElement;
+		if(row.parentElement==null)
+		{
+			console.log("Failed to correctly find 'table_row' element");
+			return;
+		}//if.
+	}//while.
+
+	if(!confirm("Are you sure you want to delete this row?"))
+	{return false;}
+
+	var table = row.parentElement;
+	table.removeChild(row);
+
+	 return false;
+}//removeRow().
 
 function adjustTotals(row)
 {
