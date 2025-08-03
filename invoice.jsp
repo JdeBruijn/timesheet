@@ -11,25 +11,30 @@
 
 	String create_mode = request.getParameter("create_mode");
 
+	boolean foreign_account=false;
+
 	InvoiceData invoice_data = new InvoiceData();
 	if(create_mode==null || create_mode.equals("false"))
 	{
 		String invoice_id = request.getParameter("invoice_id");
+		String currency = request.getParameter("currency");
 		String rate_str = request.getParameter("rate");
 		String row_ids = request.getParameter("row_ids");
 		String group_by = request.getParameter("group_by");
-		invoice_data = Backend.generateInvoice(row_ids, group_by, invoice_id, rate_str, invoice_data);
+		invoice_data = Backend.generateInvoice(row_ids, group_by, invoice_id, currency, rate_str, invoice_data);
 	}//if.
 	else 
 	{
 		try
 		{
 			String invoice_number = request.getParameter("invoice_number");
+			String currency = request.getParameter("currency");
 			String rate_str = request.getParameter("rate");
 			String client_id = request.getParameter("client_id");
 			HashMap<String, String> client_details = Backend.getClientDetails(Integer.parseInt(client_id));
 			invoice_data.setClientDetails(client_details);
 			invoice_data.invoice_number = Integer.parseInt(invoice_number);
+			invoice_data.setCurrency(currency);
 			invoice_data.rate = Double.parseDouble(rate_str);
 		}//try.
 		catch(NullPointerException | NumberFormatException nfe)
@@ -143,7 +148,7 @@ else
 			<div class="row_block" style="float:right; width:calc( 30% + 1px ); border:1px solid black; border-top:none;">
 				<div class="details_row" style="float:left; font-size:24px; font-weight:bold; padding-left:0;">
 					<div class="details_label" style="width:33.3%;">Total: </div>
-					<div id="invoice_total" class="details_value" style="width:66.6%;">$ <%=invoice_data.getTotal()%></div>
+					<div id="invoice_total" class="details_value" style="width:66.6%;"><%=invoice_data.currency%> <%=invoice_data.getTotal()%></div>
 				</div>
 			</div>
 		</div>
@@ -152,12 +157,32 @@ else
 				<div class="comments_box">
 					<div class="comments_header">Payment Details</div>
 					<div class="comments_body">
+					<%if(foreign_account)
+					{%>	
 						<div class="comments_line"><b>Account Name:</b> Jonathan de Bruijn</div>
 						<div class="comments_line"><b>Address:</b> 8 Tedder road, Harare, Zimbabwe</div>
 						<div class="comments_line"><b>Account Number:</b> 8312255558</div>
 						<div class="comments_line"><b>Bank Name:</b> Wise</div>
 						<div class="comments_line"><b>Bank Address:</b> 30 W. 26th Street, Sixth Floor, New York NY 10010, United States</div>
 						<div class="comments_line"><b>Swift Code:</b> CMFGUS33</div>
+					<%}
+					else
+					{
+						if(invoice_data.currency.equals("ZWG"))
+						{%>
+							<div class="comments_line"><b>Account Name:</b> Jonathan Pieter de Bruijn</div>
+							<div class="comments_line"><b>Account Number:</b> 11016020697</div>
+							<div class="comments_line"><b>Bank Name:</b> Nedbank</div>
+							<div class="comments_line"><b>Branch:</b> Msasa</div>
+						<%}//if.
+						else
+						{%>
+							<div class="comments_line"><b>Account Name:</b> Jonathan Pieter de Bruijn</div>
+							<div class="comments_line"><b>Account Number:</b> 11992626838</div>
+							<div class="comments_line"><b>Bank Name:</b> Southerton (503)</div>
+							<div class="comments_line"><b>Branch:</b> Msasa</div>
+						<%}//else%>
+					<%}%>
 					<!--	<div class="comments_line">2) Payments will be accepted in USD or ZWL at the current rate on the day of payment.</div>-->
 					</div>
 				</div>
@@ -169,6 +194,10 @@ else
 <%}//else.%>
 </body>
 
-<script>document.onload=startup();</script>
+<script>
+	var currency="<%=invoice_data.currency%>";
+	var invoice_rate=<%=invoice_data.rate%>;
+	document.onload=startup();
+</script>
 
 </html>

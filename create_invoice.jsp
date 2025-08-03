@@ -35,6 +35,13 @@
 			<input id="invoice_number_input" class="input_box" type="Number">
 		</div>
 		<div class="input_row">
+			<div class="input_label">Currency: </div>
+			<select id="currency_input">
+				<option>ZWG</option>
+				<option>USD</option>
+			</select>
+		</div>
+		<div class="input_row">
 			<div class="input_label">Rate: </div>
 			<input id="rate_input" class="input_box" type="Number">
 		</div>
@@ -67,11 +74,12 @@
 	function createInvoice()
 	{
 		var invoice_number = document.getElementById("invoice_number_input").value;
+		var currency = document.getElementById("currency_input").value;
 		var rate = document.getElementById("rate_input").value;
 		var client_name = document.getElementById("client_input").value;
 		var client = client_mapper[client_name];
 
-		window.location.href="/timesheet/invoice.jsp?create_mode=true&invoice_number="+invoice_number+"&rate="+rate+"&client_id="+client;
+		window.location.href="/timesheet/invoice.jsp?create_mode=true&invoice_number="+invoice_number+"&currency="+currency+"&rate="+rate+"&client_id="+client;
 	}//createInvoice().
 </script>
 

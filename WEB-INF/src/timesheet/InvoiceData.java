@@ -28,6 +28,8 @@ public class InvoiceData
 	public String invoice_date="";
 	public String due_date="";
 
+	public String currency="ZWG";
+
 	public double rate=base_rate;
 
 	public int invoice_number=0;
@@ -79,6 +81,17 @@ public class InvoiceData
 	{
 		this.client_details=details;
 	}//setClientDetails().
+
+	public void setCurrency(String currency)
+	{
+		if(currency==null || currency.trim().isEmpty())
+		{
+			log.info(class_name+".setCurrency(): invalid currency. Setting to default 'ZWG'");
+			return;
+		}//if.
+
+		this.currency=currency;
+	}//setCurrency().
 
 	public String getInvoiceNumber()
 	{

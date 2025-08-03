@@ -432,7 +432,7 @@ public class Backend extends HttpServlet
 		{log.severe(class_name+" IO Exception while trying to return data:\n"+ioe);}
 	}//returnData().
 
-	public static InvoiceData generateInvoice(String ids_str, String group_by, String invoice_id_str, String rate_str, InvoiceData invoice_data)
+	public static InvoiceData generateInvoice(String ids_str, String group_by, String invoice_id_str, String currency, String rate_str, InvoiceData invoice_data)
 	{
 		boolean new_invoice=false;
 		try
@@ -443,6 +443,14 @@ public class Backend extends HttpServlet
 			log.info(class_name+" Creating new Invoice...");
 			new_invoice=true;
 		}//catch().
+
+		if(currency==null || currency.trim().isEmpty())
+		{
+			log.info(class_name+" No value found for invoice 'currency'. Defaulting to ZWG");
+			currency="ZWG";
+		}//if.
+		else
+		{invoice_data.currency=currency;}
 
 		try
 		{invoice_data.rate = Double.parseDouble(rate_str);}

@@ -2,6 +2,8 @@ var current_input_cell = null;
 
 //Defined in invoice.jsp
 //var last_background_colour;
+//var currency;
+//var invoice_rate;
 
 function printInvoiceToPDF()
 {
@@ -54,6 +56,7 @@ function editCell(event)
 
 	parent.insertBefore(current_input_cell, cell);
 	parent.removeChild(cell);
+	current_input_cell.focus();
 }//editCell().
 
 function onFinishEdit()
@@ -172,6 +175,12 @@ function adjustTotals(row)
 	var hours = Number(row.getElementsByClassName("hours_cell")[0].innerHTML);
 	var rate = Number(row.getElementsByClassName("rate_cell")[0].innerHTML);
 	console.log("hours="+hours+" rate="+rate);//debug**
+	if(rate==0)
+	{
+		rate=invoice_rate;
+		row.getElementsByClassName("rate_cell")[0].innerHTML=rate;
+	}//if.
+
 	var row_total = hours*rate;
 
 	console.log("row_total = "+row_total);//debug**
@@ -193,7 +202,7 @@ function adjustTotals(row)
 	total_total=total_total.toFixed(2);
 	console.log("rounded total_total="+total_total);//debug**
 	var invoice_total_cell = document.getElementById("invoice_total");
-	invoice_total_cell.innerHTML="$ "+Number(total_total).toFixed(2);
+	invoice_total_cell.innerHTML=currency+" "+Number(total_total).toFixed(2);
 }//adjustTotals().
 
 

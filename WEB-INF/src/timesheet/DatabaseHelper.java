@@ -20,7 +20,7 @@ public class DatabaseHelper
 	private static final String class_name="DatabaseHelper";
 	private static final Logger log = Logger.getLogger(class_name);
 	
-	private static String database_ip = "192.168.88.122";
+	private static String database_ip = "localhost";
 	private static String database = "timesheet";
 	private static String username = "jannie";
 	private static String password = "Jackal51";
